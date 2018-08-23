@@ -1,0 +1,19 @@
+SELECT
+        po.num as "PO",
+        po.customerso as "SO",
+        replace(vendor.name, ',', 'COMMAESCAPE') as "VENDOR",
+        sum((poitem.qtytofulfill - poitem.qtyfulfilled) * poitem.unitcost) as "Value",
+        part.num as "PART",
+        poitem.polineitem as "LINE"
+
+FROM po 
+        JOIN vendor on po.vendorid = vendor.id
+        JOIN poitem on po.id = poitem.poid
+        LEFT JOIN part on poitem.partid = part.id
+
+Where /* (lower(po.customerso) like 'stock'
+        or po.customerso like '')
+    and*/ po.statusid in (20,30,40,50,55)
+            and poitem.typeid in(10,11)
+            and ((poitem.qtytofulfill - poitem.qtyfulfilled) * poitem.unitcost) > 0
+GROUP BY po.num

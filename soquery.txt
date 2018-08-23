@@ -1,0 +1,5 @@
+select so.num as "SO",
+       replace(customer.name, ',', 'COMMAESCAPE') as "Customer"
+
+from so
+     left join customer on so.customerid = customer.id
